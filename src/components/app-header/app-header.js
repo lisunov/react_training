@@ -19,11 +19,25 @@ const Header = styled.div`
   }
 `;
 
-const AppHeader = () => {
+const AppHeader = ({posts}) => {
   return (<Header as='a'>
     <h1>Aleksei Lisunov</h1>
-    <h2>5 записей, из них понравилось 0</h2>
+    <h2>{posts.length} записей, из них понравилось {countLikes(posts)}</h2>
   </Header>)
 };
+
+const countLikes = (posts) => {
+  const res = posts.reduce(function(count, currentPost){
+    return count + (currentPost.like ? 1 : 0);
+  }, 0);
+  return res;
+}
+
+const countImportant = (posts) => {
+  const res = posts.reduce(function(count, currentPost){
+    return count + (currentPost.important ? 1 : 0);
+  }, 0);
+  return res;
+}
 
 export default AppHeader;
