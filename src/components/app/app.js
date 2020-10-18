@@ -26,7 +26,8 @@ export default class App extends Component {
       {label: "Going to learn react", important: false, id: 'we', like: true},
       {label: "That is so good", important: true, id: 'wer'},
       {label: "I need a break...", important: false, id: 'sdf'}
-    ]
+    ],
+    term:''
   };
 
   deleteItem = (id) => {
@@ -54,7 +55,6 @@ export default class App extends Component {
   }
 
   onToggle = (id, fieldName) => {
-    console.log(`important ${id}`);
     this.setState(({data}) => {
       const index = data.findIndex((elem) =>
         elem.id === id);
@@ -72,18 +72,41 @@ export default class App extends Component {
     });
   }
 
+  searchItems = (items, term) => {
+    if (term.length === 0) {
+      return items
+    } else {
+      return items.filter((item) => {
+        return item.label.toLowerCase().includes(term.toLowerCase());
+      })
+    }
+  };
+
+  onUpdateSearch = (term) => {
+    this.setState(({data}) => {
+      return {
+        data:data,
+        term:term
+      }
+    })
+  };
+
   render() {
+    const {data, term} = this.state;
+    const visiblePosts = this.searchItems(data, term);
+
     return (
       <AppBlock>
         <AppHeader
           posts={this.state.data}
         />
         <div className="search-panel d-flex">
-          <SearchPanel/>
+          <SearchPanel
+            onUpdateSearch = {this.onUpdateSearch}/>
           <PostStatusFilter/>
         </div>
         <PostList
-          posts={this.state.data}
+          posts={visiblePosts}
           onDelete={this.deleteItem}
           onToggleImportant={this.onToggle}
           onToggleLike={this.onToggle}
